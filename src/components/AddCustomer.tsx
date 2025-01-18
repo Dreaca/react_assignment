@@ -1,5 +1,9 @@
-// src/components/AddCustomerModal.tsx
-import React from 'react';
+
+import React, {useState} from 'react';
+import {useDispatch} from "react-redux";
+import {addCustomer} from "../reducer/CustomerSlice.ts";
+import {v4} from "uuid";
+
 
 interface AddCustomerModalProps {
     isOpen: boolean;
@@ -7,12 +11,22 @@ interface AddCustomerModalProps {
 }
 
 const AddCustomerModal: React.FC<AddCustomerModalProps> = ({ isOpen, onClose }) => {
+    const [name,setName] = useState('');
+    const [address, setAddress] = useState('');
+    const [phone, setPhone] = useState('');
+    const dispatch = useDispatch();
     if (!isOpen) return null;
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        console.log("Customer added");
+        const id = `CID-${v4()}`;
+        const customer = {
+            id,
+            name,
+            address,
+            phone,
+        }
+        dispatch(addCustomer(customer))
         onClose();
     };
 
@@ -21,9 +35,12 @@ const AddCustomerModal: React.FC<AddCustomerModalProps> = ({ isOpen, onClose }) 
             <div className="bg-white p-5 rounded shadow-lg">
                 <h2 className="text-xl mb-4">Add Customer</h2>
                 <form onSubmit={handleSubmit}>
-                    <input type="text" placeholder="Name" className="border p-2 mb-2 w-full" required />
-                    <input type="email" placeholder="Email" className="border p-2 mb-2 w-full" required />
-                    <input type="tel" placeholder="Phone" className="border p-2 mb-2 w-full" required />
+                    <input type="text" placeholder="Name" className="border p-2 mb-2 w-full"
+                           required onChange={(e)=>setName(e.target.value)} />
+                    <input type="text" placeholder="Address" className="border p-2 mb-2 w-full"
+                           required onChange={(e)=>setAddress(e.target.value)} />
+                    <input type="tel" placeholder="Phone" className="border p-2 mb-2 w-full"
+                           required onChange={(e)=>setPhone(e.target.value)} />
                     <div className="flex justify-end">
                         <button type="button" className="mr-2" onClick={onClose}>Cancel</button>
                         <button type="submit" className="bg-blue-500 text-white p-2 rounded">Add</button>

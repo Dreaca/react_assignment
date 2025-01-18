@@ -37,13 +37,6 @@ const SearchBar = (props,children) => {
                     >
                         Add
                     </button>
-                    <button
-                        className="btn btn-outline-warning border rounded p-2"
-                        onClick={props.handleModal2}
-                        id="updateCustBtn"
-                    >
-                        Update
-                    </button>
                 </div>
             </div>
         </div>
