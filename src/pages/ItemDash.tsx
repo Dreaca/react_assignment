@@ -32,7 +32,7 @@ export function ItemDash(){
     return (
         <>
         <div className="flex flex-col items-center">
-        <h1 className="p-5 text-4xl font-light mb-6 text-gray-900">Item</h1>
+        <h1 className="p-5 text-4xl font-light mb-2 text-gray-900">Item</h1>
         </div>
     <div>
         <SearchBar handleSearch={handleSearch} setSearchTerm={setSearchTerm} handleModal1={showAddItem}/>
