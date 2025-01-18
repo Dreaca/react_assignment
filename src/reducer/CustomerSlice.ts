@@ -11,7 +11,6 @@ const CustomerSlice = createSlice({
     reducers: {
         addCustomer: (state, {payload}) => {
             state.customers.push(payload);
-            console.log(state.customers);
         },
         deleteCustomer: (state, {payload}) => {
             state.customers = state.customers.filter((customer:Customer) => customer.id !== payload.id);

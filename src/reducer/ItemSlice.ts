@@ -1,21 +1,24 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Item} from "../models/Item.ts";
+import {Customer} from "../models/Customer.ts";
 
-
+const initialState = {
+    items: [],
+}
 const ItemSlice = createSlice({
-    name:"ItemSclice",
-    initialState:[] as Item[],
+    name:"Item",
+    initialState:initialState,
     reducers:{
-        addItem:(state, action:PayloadAction<Item>) => {
-            state.push(action.payload);
+        addItem:(state, {payload}) => {
+            state.items.push(payload);
         },
-        deleteItem:(state, action:PayloadAction<Item>) => {
-            state.splice(state.indexOf(action.payload), 1);
+        deleteItem:(state, {payload}) => {
+            state.items = state.items.filter((customer:Customer) => customer.id !== payload.id);
         },
-        updateItem:(state, action:PayloadAction<Item>) => {
-            const index = state.indexOf(action.payload);
+        updateItem:(state,{payload}) => {
+            const index = state.items.indexOf(payload.itemCode);
             if (index > -1) {
-                state[index] = action.payload;
+                state.items[index] =payload;
             }
         }
     }

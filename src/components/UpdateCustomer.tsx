@@ -60,7 +60,7 @@ const UpdateCustomerModal: React.FC<UpdateCustomerModalProps> = ({ isOpen, onClo
                     <div className="flex justify-end">
                         <button type="button" className="mr-2" onClick={onClose}>Cancel</button>
                         <button type="submit" className="bg-blue-500 text-white p-2 rounded">Update</button>
-                        <button type="button" className=" bg-red-500 mr-2" onClick={handleDelete}>Delete</button>
+                        <button type="button" className=" bg-red-500 p-2 rounded" onClick={handleDelete}>Delete</button>
                     </div>
                 </form>
             </div>

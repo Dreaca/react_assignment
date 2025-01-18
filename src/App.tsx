@@ -4,9 +4,9 @@ import {createBrowserRouter, RouterProvider} from "react-router";
 import {Home} from "./pages/Home.tsx";
 import {RootLayout} from "./components/RootLayout.tsx";
 import {CustomerDash} from "./pages/CustomerDash.tsx";
-import {Item} from "./pages/Item.tsx";
-import {Orders} from "./pages/Orders.tsx";
-import {OrderDetails} from "./pages/OrderDetails.tsx";
+import {ItemDash} from "./pages/ItemDash.tsx";
+import {OrdersDash} from "./pages/OrdersDash.tsx";
+import {OrderDetailsDash} from "./pages/OrderDetailsDash.tsx";
 
 
 function App() {
@@ -14,9 +14,9 @@ function App() {
         {path:'',element:<RootLayout/>,children:[
                 {path: '/', element: <Home/>},
                 {path:'/customer',element:<CustomerDash/>},
-                {path:'/items',element:<Item/>},
-                {path:'/orders',element:<Orders/>},
-                {path:'/orderdetail',element:<OrderDetails/>},
+                {path:'/items',element:<ItemDash/>},
+                {path:'/orders',element:<OrdersDash/>},
+                {path:'/orderdetail',element:<OrderDetailsDash/>},
                 ]}
     ])
     return (
