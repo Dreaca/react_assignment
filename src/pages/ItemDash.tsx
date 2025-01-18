@@ -3,25 +3,29 @@ import SearchBar from "../components/SerchBar.tsx";
 import {useState} from "react";
 import {Item} from "../models/Item.ts";
 import AddItemModal from "../components/AddItem.tsx";
+import UpdateItemModal from "../components/UpdateItem.tsx";
 
 export function ItemDash(){
     const items = useSelector(state => state.item.items);
-    const [desc, setDesc] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
-
     const [isAddModalOpen, setAddModalOpen] = useState<boolean>(false);
 
     const [isUpdateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
 
+    const [selectedItem,setSelectedItem] = useState<Item|null>(null);
+
+    const [searchTerm, setSearchTerm] = useState("");
+
     const handleSearch=()=>{
-        //TODO: Handle search
+        console.log(searchTerm);
     };
     const showAddItem=()=>{
         setAddModalOpen(true);
 
     }
     const showUpdateItem=(item:Item)=>{
-        //TODO: Handle update Item
+        setSelectedItem(item);
+        setUpdateModalOpen(true);
+
     }
 
 
@@ -56,6 +60,9 @@ export function ItemDash(){
         </tbody>
     </table>
             <AddItemModal isOpen={isAddModalOpen} onClose={()=>setAddModalOpen(false)}/>
+            <UpdateItemModal isOpen={isUpdateModalOpen}
+                             onClose={()=>setUpdateModalOpen(false)}
+                             selectedItem={selectedItem}/>
         </>
     )
 }

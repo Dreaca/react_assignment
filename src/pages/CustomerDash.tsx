@@ -25,6 +25,7 @@ export function CustomerDash() {
     function showUpdateCustomer(customer: Customer) {
         setSelectedCustomer(customer)
         setUpdateModalOpen(true);
+
     }
     return (
         <>

@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Item} from "../models/Item.ts";
-import {Customer} from "../models/Customer.ts";
+
 
 const initialState = {
     items: [],
@@ -13,13 +13,17 @@ const ItemSlice = createSlice({
             state.items.push(payload);
         },
         deleteItem:(state, {payload}) => {
-            state.items = state.items.filter((customer:Customer) => customer.id !== payload.id);
+            state.items = state.items.filter((item:Item) => item.itemCode !== payload.itemCode);
         },
         updateItem:(state,{payload}) => {
-            const index = state.items.indexOf(payload.itemCode);
-            if (index > -1) {
-                state.items[index] =payload;
-            }
+            state.items = state.items.map((item:Item)=>(item.itemCode === payload.itemCode)?
+                {...item,
+                    itemCode:payload.itemCode,
+                    desc:payload.desc,
+                    author:payload.author,
+                    qto:payload.qto,
+                    price:payload.price}:item
+            );
         }
     }
 })

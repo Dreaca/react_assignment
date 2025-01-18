@@ -15,11 +15,15 @@ const CustomerSlice = createSlice({
         deleteCustomer: (state, {payload}) => {
             state.customers = state.customers.filter((customer:Customer) => customer.id !== payload.id);
         },
-        updateCustomer: (state, {payload}) => {
-            const index = state.customers.findIndex((c:Customer) => c.id === payload.payload.id);
-            if (index !== -1) {
-                state.customers[index] = payload;
-            }
+        updateCustomer: (state, action) => {
+            state.customers = state.customers.map((customer:Customer) =>
+                customer.id === action.payload.id ?
+                    {...customer, id: action.payload.id,
+                        name: action.payload.name,
+                        address: action.payload.address,
+                        phone: action.payload.phone}
+                    :customer
+            )
         }
     },
 });

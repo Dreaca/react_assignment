@@ -19,7 +19,7 @@ const UpdateCustomerModal: React.FC<UpdateCustomerModalProps> = ({ isOpen, onClo
 
     useEffect(() => {
         if (selectedCustomer){
-            setId(id);
+            setId(selectedCustomer.id);
             setName(selectedCustomer.name);
             setPhone(selectedCustomer.phone);
             setAddress(selectedCustomer.address);
@@ -51,12 +51,12 @@ const UpdateCustomerModal: React.FC<UpdateCustomerModalProps> = ({ isOpen, onClo
             <div className="bg-white p-5 rounded shadow-lg">
                 <h2 className="text-xl mb-4">Update Customer</h2>
                 <form onSubmit={handleSubmit}>
-                    <input type="text" placeholder={name} className="border p-2 mb-2 w-full"
-                           required onChange={(e)=>setName(e.target.value)} />
-                    <input type="text" placeholder={address} className="border p-2 mb-2 w-full"
-                           required onChange={(e)=>setAddress(e.target.value)} />
-                    <input type="tel" placeholder={phone} className="border p-2 mb-2 w-full"
-                           required onChange={(e)=>setPhone(e.target.value)} />
+                    <input type="text" value={name} className="border p-2 mb-2 w-full"
+                            onChange={(e)=>setName(e.target.value)} />
+                    <input type="text" value={address} className="border p-2 mb-2 w-full"
+                            onChange={(e)=>setAddress(e.target.value)} />
+                    <input type="tel" value={phone} className="border p-2 mb-2 w-full"
+                            onChange={(e)=>setPhone(e.target.value)} />
                     <div className="flex justify-end">
                         <button type="button" className="mr-2" onClick={onClose}>Cancel</button>
                         <button type="submit" className="bg-blue-500 text-white p-2 rounded">Update</button>
