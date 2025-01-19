@@ -24,5 +24,5 @@ const OrderDetailSlice = createSlice({
         }
     }
 })
-export const {addToCart} = OrderDetailSlice.actions;
+export const {addToCart,deleteFromCart,updateCart} = OrderDetailSlice.actions;
 export default OrderDetailSlice.reducer;

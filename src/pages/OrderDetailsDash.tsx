@@ -1,10 +1,11 @@
 
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import SearchOrder from "../components/SearchOrder.tsx";
 import {useSelector} from "react-redux";
 import {Item} from "../models/Item.ts";
 import AddToCart from "../components/AddToCart.tsx";
 import {CartItem} from "../models/CartItem.ts";
+import UpdateCart from "../components/UpdateCart.tsx";
 
 export function OrderDetailsDash(){
 
@@ -23,8 +24,11 @@ export function OrderDetailsDash(){
     const [searchTerm,setSearchTerm] = useState("");
     const [suggestions, setSuggestions] = useState<Item[]>([]);
 
+    const [clickedItem, setClickedItem] = useState<CartItem|null>(null);
+
 
     const [isModalOpen,setIsModalOpen] = useState<boolean>(false);
+    const [isUpdateOpen,setIsUpdateOpen] = useState<boolean>(false);
 
     const handleBuy = () => {
         // Handle the buy order logic here
@@ -48,8 +52,9 @@ export function OrderDetailsDash(){
         setIsModalOpen(true);
     }
 
-    function handleItemModify() {
-        console.log("Clicked")
+    function handleItemModify(item:CartItem) {
+        setClickedItem(item);
+        setIsUpdateOpen(true);
     }
 
     return (
@@ -203,7 +208,7 @@ export function OrderDetailsDash(){
                     <tbody id="order-item-tbody">
                     {
                         cartItems.map((item:CartItem) =>(
-                            <tr key={item.itemCode} className="border border-gray-200" onClick={handleItemModify}>
+                            <tr key={item.itemCode} className="border border-gray-200" onClick={()=>handleItemModify(item)}>
                                 <td>{item.itemCode}</td>
                                 <td>{item.desc}</td>
                                 <td>{item.unitPrice}</td>
@@ -223,6 +228,7 @@ export function OrderDetailsDash(){
                         Finished
                     </button>
                     <AddToCart isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} suggestions={suggestions} />
+                    <UpdateCart isOpen={isUpdateOpen} onClose={()=>setIsUpdateOpen(false)} clickedItem={clickedItem} />
                 </div>
             </div>
         </div>
