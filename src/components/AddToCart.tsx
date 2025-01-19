@@ -1,6 +1,8 @@
 // src/components/AddItemModal.tsx
 import React, { useState } from 'react';
 import { Item } from "../models/Item.ts";
+import {useDispatch} from "react-redux";
+import {addToCart} from "../reducer/OrderDetailSlice.ts";
 
 interface AddItemModalProps {
     isOpen: boolean;
@@ -9,41 +11,47 @@ interface AddItemModalProps {
 }
 
 const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, suggestions }) => {
-    const [itemId, setItemId] = useState('');
-    const [itemDesc, setItemDesc] = useState('');
+
+    const dispatch = useDispatch();
+
+    const [itemCode, setItemCode] = useState('');
+    const [desc, setDesc] = useState('');
     const [unitPrice, setUnitPrice] = useState<number>(0);
-    const [quantity, setQuantity] = useState<number>(0);
+    const [qty, setQty] = useState<number>(0);
     const [subTotal, setSubTotal] = useState<number>(0);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
     const handleItemSelect = (item: Item) => {
-        setItemId(item.itemCode);
-        setItemDesc(item.desc);
+        setItemCode(item.itemCode);
+        setDesc(item.desc);
         setUnitPrice(item.price);
         setShowSuggestions(false);
-        setQuantity(1);
+        setQty(1);
         setSubTotal(item.price);
     };
 
     const handleQuantityChange = (value: string) => {
         const qty = Number(value);
-        setQuantity(qty);
+        setQty(qty);
         setSubTotal(qty * unitPrice);
     };
 
     const handleAddToCart = () => {
-        console.log({
-            itemId,
-            itemDesc,
-            unitPrice,
-            quantity,
-            subTotal,
-        });
 
-        setItemId('');
-        setItemDesc('');
+        const cartItem = {
+                itemCode,
+                desc,
+                unitPrice,
+                qty,
+                subTotal,
+        }
+
+        dispatch(addToCart(cartItem));
+
+        setItemCode('');
+        setDesc('');
         setUnitPrice(0);
-        setQuantity(0);
+        setQty(0);
         setSubTotal(0);
         onClose();
     };
@@ -61,7 +69,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, suggestion
                             type="text"
                             className="form-control border rounded p-2 w-full"
                             id="order-item-id"
-                            value={itemId}
+                            value={itemCode}
                             readOnly
                         />
                     </div>
@@ -71,9 +79,9 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, suggestion
                             type="text"
                             className="form-control border rounded p-2 w-full"
                             id="order-item-desc"
-                            value={itemDesc}
+                            value={desc}
                             onChange={(e) => {
-                                setItemDesc(e.target.value);
+                                setDesc(e.target.value);
                                 setShowSuggestions(true);
                             }}
                             onFocus={() => setShowSuggestions(true)}
@@ -110,7 +118,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, suggestion
                             className="form-control border rounded p-2 w-full"
                             id="order-item-qty"
                             placeholder="Enter Quantity"
-                            value={quantity}
+                            value={qty}
                             onChange={(e) => handleQuantityChange(e.target.value)}
                         />
                     </div>

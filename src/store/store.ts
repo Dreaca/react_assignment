@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import CustomerSlice from "../reducer/CustomerSlice.ts";
 import ItemSlice from "../reducer/ItemSlice.ts";
 import OrderSlice from "../reducer/OrderSlice.ts";
+import OrderDetailSlice from "../reducer/OrderDetailSlice.ts";
 // import orderReducer from './orderSlice'; // Create this slice
 
 export const store = configureStore({
@@ -9,5 +10,6 @@ export const store = configureStore({
         customer: CustomerSlice,
         item: ItemSlice,
         orders: OrderSlice,
+        cart:OrderDetailSlice,
     },
 });

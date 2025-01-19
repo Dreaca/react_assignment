@@ -4,10 +4,12 @@ import SearchOrder from "../components/SearchOrder.tsx";
 import {useSelector} from "react-redux";
 import {Item} from "../models/Item.ts";
 import AddToCart from "../components/AddToCart.tsx";
+import {CartItem} from "../models/CartItem.ts";
 
 export function OrderDetailsDash(){
 
     const items = useSelector(state => state.item.items)
+    const cartItems = useSelector(state => state.cart.cartItems);
 
     const [orderId, setOrderId] = useState('');
     const [customerId, setCustomerId] = useState('');
@@ -44,6 +46,10 @@ export function OrderDetailsDash(){
         })
         setSuggestions(suggested)
         setIsModalOpen(true);
+    }
+
+    function handleItemModify() {
+        console.log("Clicked")
     }
 
     return (
@@ -195,7 +201,17 @@ export function OrderDetailsDash(){
                     </tr>
                     </thead>
                     <tbody id="order-item-tbody">
-                    {/* Dynamically populated rows */}
+                    {
+                        cartItems.map((item:CartItem) =>(
+                            <tr key={item.itemCode} className="border border-gray-200" onClick={handleItemModify}>
+                                <td>{item.itemCode}</td>
+                                <td>{item.desc}</td>
+                                <td>{item.unitPrice}</td>
+                                <td>{item.qty}</td>
+                                <td>{item.subTotal}</td>
+                            </tr>
+                        ))
+                    }
                     </tbody>
                 </table>
                 <div className="flex justify-end mt-6">
