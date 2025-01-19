@@ -21,8 +21,11 @@ const OrderDetailSlice = createSlice({
                     qty:payload.qty,
                     subTotal:payload.subTotal}:item
             );
+        },
+        clearCart(state){
+            state.cartItems = []
         }
     }
 })
-export const {addToCart,deleteFromCart,updateCart} = OrderDetailSlice.actions;
+export const {addToCart,deleteFromCart,updateCart,clearCart} = OrderDetailSlice.actions;
 export default OrderDetailSlice.reducer;

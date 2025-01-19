@@ -10,7 +10,7 @@ export function OrdersDash(){
     const handleSearch = ()=>{
         //TODO: Handle search
     }
-    const handleOrder = ()=>{
+    const handleOrder = (order:Order)=>{
         //TODO: Handle Order stuff here
     }
     return (
@@ -36,6 +36,7 @@ export function OrdersDash(){
                 {
                     orders.map((order: Order) => (
                         <tr key={order.orderId} onClick={() => handleOrder(order)}>
+                            <td>{order.orderId}</td>
                             <td>{order.customerName}</td>
                             <td>{order.date}</td>
                             <td>{order.total}</td>

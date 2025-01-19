@@ -1,60 +1,102 @@
-
-import  { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchOrder from "../components/SearchOrder.tsx";
-import {useSelector} from "react-redux";
-import {Item} from "../models/Item.ts";
+import {useDispatch, useSelector} from "react-redux";
+import { Item } from "../models/Item.ts";
 import AddToCart from "../components/AddToCart.tsx";
-import {CartItem} from "../models/CartItem.ts";
+import { CartItem } from "../models/CartItem.ts";
 import UpdateCart from "../components/UpdateCart.tsx";
+import { v4 } from "uuid";
+import {Order} from "../models/Order.ts";
+import {clearCart} from "../reducer/OrderDetailSlice.ts";
+import {Customer} from "../models/Customer.ts";
+import {addOrder} from "../reducer/OrderSlice.ts";
+import {useNavigate} from "react-router";
 
-export function OrderDetailsDash(){
-
-    const items = useSelector(state => state.item.items)
+export function OrderDetailsDash() {
+    const items = useSelector(state => state.item.items);
     const cartItems = useSelector(state => state.cart.cartItems);
+    const customerList = useSelector(state => state.customer.customers)
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [orderId, setOrderId] = useState('');
     const [customerId, setCustomerId] = useState('');
     const [orderDate, setOrderDate] = useState('');
     const [customerName, setCustomerName] = useState('');
-    const [total, setTotal] = useState<number | string>('');
-    const [discount, setDiscount] = useState('');
-    const [subTotal, setSubTotal] = useState<number | string>('');
-    const [cash, setCash] = useState('');
-    const [balance, setBalance] = useState('');
-    const [searchTerm,setSearchTerm] = useState("");
+    const [total, setTotal] = useState<number>(0);
+    const [discount, setDiscount] = useState<number>(0);
+    const [subTotal, setSubTotal] = useState<number>(0);
+    const [cash, setCash] = useState<number>(0);
+    const [balance, setBalance] = useState<number>(0);
+    const [searchTerm, setSearchTerm] = useState("");
     const [suggestions, setSuggestions] = useState<Item[]>([]);
+    const [clickedItem, setClickedItem] = useState<CartItem | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
+    const [quantity, setQuantity] = useState<number>(1);
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
-    const [clickedItem, setClickedItem] = useState<CartItem|null>(null);
+    const [order, setOrder] = useState<Order>({});
 
+    useEffect(() => {
+        setOrderId(`OID-${v4()}`);
+    }, []);
 
-    const [isModalOpen,setIsModalOpen] = useState<boolean>(false);
-    const [isUpdateOpen,setIsUpdateOpen] = useState<boolean>(false);
+    useEffect(() => {
+        // Update subtotal and balance whenever total, discount, or cash changes
+        const discountAmount = (total * (discount / 100));
+        const calculatedSubTotal = total - discountAmount;
+        setSubTotal(calculatedSubTotal);
+        setBalance(cash - calculatedSubTotal);
+    }, [total, discount, cash]);
 
     const handleBuy = () => {
-        // Handle the buy order logic here
-        console.log('Order placed:', { orderId, customerId, orderDate, customerName, total, discount, subTotal, cash, balance });
-    };
-    /*const handleSubmit = ()=>{
+        if(order){
+            order.orderId = orderId;
+            order.date = orderDate
+            order.customerName = customerName;
+            order.customerId = customerId;
+            order.total = total;
+            order.discount = discount;
+            order.subtotal = subTotal;
+        }
+        dispatch(addOrder(order));
+        navigate('/orders');
 
-    }*/
+    };
 
     function handleFinish() {
 
+            order.cartItems = cartItems;
+            let cartTotal = 0
+
+            cartItems.forEach((item: CartItem) => {
+                cartTotal += item.subTotal
+            })
+
+            setTotal(cartTotal);
+            dispatch(clearCart())
     }
-    function handleSearch(){
-        const suggested:Item[] = []
-        items.forEach((item:Item) => {
-            if(item.desc.toLowerCase().includes(searchTerm.toLowerCase())){
-                suggested.push(item)
+
+    function handleSearch() {
+        const suggested: Item[] = [];
+        items.forEach((item: Item) => {
+            if (item.desc.toLowerCase().includes(searchTerm.toLowerCase())) {
+                suggested.push(item);
             }
-        })
-        setSuggestions(suggested)
+        });
+        setSuggestions(suggested);
         setIsModalOpen(true);
     }
 
-    function handleItemModify(item:CartItem) {
+    function handleItemModify(item: CartItem) {
         setClickedItem(item);
         setIsUpdateOpen(true);
+    }
+    function handleCustomerSelect(customer: Customer) {
+        setCustomerId(customer.id);
+        setCustomerName(customer.name);
+        setShowSuggestions(false);
     }
 
     return (
@@ -69,12 +111,10 @@ export function OrderDetailsDash(){
                             id="orderId"
                             className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             value={orderId}
-                            onChange={(e) => setOrderId(e.target.value)}
-                            required
+                            readOnly
                         />
                     </div>
 
-                    {/* Customer Id */}
                     <div>
                         <label htmlFor="order-cust-id" className="block text-sm font-medium mb-1">Customer ID</label>
                         <input
@@ -83,11 +123,10 @@ export function OrderDetailsDash(){
                             className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             value={customerId}
                             onChange={(e) => setCustomerId(e.target.value)}
-                            required
+                            readOnly
                         />
                     </div>
 
-                    {/* Order Date */}
                     <div>
                         <label htmlFor="order-date" className="block text-sm font-medium mb-1">Date</label>
                         <input
@@ -100,22 +139,35 @@ export function OrderDetailsDash(){
                         />
                     </div>
 
-                    {/* Customer Name */}
                     <div>
-                        <label htmlFor="order-cust-name" className="block text-sm font-medium mb-1">Customer
-                            Name</label>
+                        <label htmlFor="order-item-desc" className="form-label">Customer Name</label>
                         <input
                             type="text"
-                            id="order-cust-name"
-                            className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="Customer Name"
+                            className="form-control border rounded p-2 w-full"
+                            id="order-item-desc"
                             value={customerName}
-                            onChange={(e) => setCustomerName(e.target.value)}
-                            required
+                            onChange={(e) => {
+                                setCustomerName(e.target.value);
+                                setShowSuggestions(true);
+                            }}
+                            onFocus={() => setShowSuggestions(true)}
                         />
+                        {/* Suggestions List */}
+                        {showSuggestions && customerList.length > 0 && (
+                            <ul id="item-id-suggestions" className="mt-2 border border-gray-300 rounded">
+                                {customerList.map((item:Customer) => (
+                                    <li
+                                        key={item.id}
+                                        className="border-b p-2 cursor-pointer hover:bg-gray-200"
+                                        onClick={() => handleCustomerSelect(item)}
+                                    >
+                                        {item.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
 
-                    {/* Total */}
                     <div>
                         <label htmlFor="order-total" className="block text-sm font-medium mb-1">Total</label>
                         <input
@@ -123,62 +175,56 @@ export function OrderDetailsDash(){
                             id="order-total"
                             className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             value={total}
-                            onChange={(e) => setTotal(e.target.value)}
+                            onChange={(e) => setTotal(Number(e.target.value))}
                             required
                         />
                     </div>
 
-                    {/* Discount */}
                     <div>
-                        <label htmlFor="order-discount" className="block text-sm font-medium mb-1">Discount</label>
+                        <label htmlFor="order-discount" className="block text-sm font-medium mb-1">Discount %</label>
                         <input
-                            type="text"
+                            type="number"
                             id="order-discount"
                             className="block w-full border-gray-300 rounded-md bg-gray-100 shadow-sm"
-                            value="5% off"
-                            disabled
+                            value={discount}
+                            onChange={(e) => setDiscount(Number(e.target.value))}
                         />
                     </div>
 
-                    {/* Sub Total */}
                     <div>
                         <label htmlFor="order-full-total" className="block text-sm font-medium mb-1">Sub Total</label>
                         <input
-                            type="text"
+                            type="number"
                             id="order-full-total"
                             className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             value={subTotal}
-                            onChange={(e) => setSubTotal(e.target.value)}
-                            required
+                            readOnly
                         />
                     </div>
 
-                    {/* Cash */}
                     <div>
-                        <label htmlFor="customer-cash" className="block text-sm font-medium mb-1">Cash</label>
+                        <label htmlFor="customer-c ash" className="block text-sm font-medium mb-1">Cash</label>
                         <input
-                            type="text"
+                            type="number"
                             id="customer-cash"
                             className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             value={cash}
-                            onChange={(e) => setCash(e.target.value)}
+                            onChange={(e) => setCash(Number(e.target.value))}
                             required
                         />
                     </div>
 
-                    {/* Balance */}
                     <div>
                         <label htmlFor="customer-bal" className="block text-sm font-medium mb-1">Balance</label>
                         <input
-                            type="text"
+                            type="number"
                             id="customer-bal"
                             className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             value={balance}
-                            onChange={(e) => setBalance(e.target.value)}
+                            readOnly
                         />
                     </div>
 
-                    {/* Buy Button */}
                     <button
                         type="button"
                         className="w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 focus:outline-none"
@@ -189,10 +235,8 @@ export function OrderDetailsDash(){
                 </form>
             </div>
 
-            {/* Table Section */}
-
             <div className="w-full md:w-3/4 ml-0 md:ml-[4.5%] p-10">
-                <SearchOrder  setSearchTerm={setSearchTerm} handleSearch={handleSearch}>Add Item</SearchOrder>
+                <SearchOrder setSearchTerm={setSearchTerm} handleSearch={handleSearch}>Add Item</SearchOrder>
 
                 <h1 className="text-2xl font-bold text-center mb-8">Item List</h1>
                 <table className="w-full border-collapse border border-gray-200">
@@ -206,17 +250,16 @@ export function OrderDetailsDash(){
                     </tr>
                     </thead>
                     <tbody id="order-item-tbody">
-                    {
-                        cartItems.map((item:CartItem) =>(
-                            <tr key={item.itemCode} className="border border-gray-200" onClick={()=>handleItemModify(item)}>
-                                <td>{item.itemCode}</td>
-                                <td>{item.desc}</td>
-                                <td>{item.unitPrice}</td>
-                                <td>{item.qty}</td>
-                                <td>{item.subTotal}</td>
-                            </tr>
-                        ))
-                    }
+                    {cartItems.map((item: CartItem) => (
+                        <tr key={item.itemCode} className="border border-gray-200"
+                            onClick={() => handleItemModify(item)}>
+                            <td>{item.itemCode}</td>
+                            <td>{item.desc}</td>
+                            <td>{item.unitPrice}</td>
+                            <td>{item.qty}</td>
+                            <td>{item.subTotal}</td>
+                        </tr>
+                    ))}
                     </tbody>
                 </table>
                 <div className="flex justify-end mt-6">
@@ -227,12 +270,10 @@ export function OrderDetailsDash(){
                     >
                         Finished
                     </button>
-                    <AddToCart isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} suggestions={suggestions} />
-                    <UpdateCart isOpen={isUpdateOpen} onClose={()=>setIsUpdateOpen(false)} clickedItem={clickedItem} />
+                    <AddToCart isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} suggestions={suggestions} />
+                    <UpdateCart isOpen={isUpdateOpen} onClose={() => setIsUpdateOpen(false)} clickedItem={clickedItem} />
                 </div>
             </div>
         </div>
-
-
     );
 }
