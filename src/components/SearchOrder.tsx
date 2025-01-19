@@ -8,7 +8,7 @@ const SearchOrder= (props,children)=>{
                             <input
                                 className="form-control me-2 border rounded p-2"
                                 type="search"
-                                placeholder="Search customer"
+                                placeholder="Search Here"
                                 aria-label="Search"
                                 id="searchBar"
                                 onChange={(e) => props.setSearchTerm(e.target.value)}
@@ -19,14 +19,14 @@ const SearchOrder= (props,children)=>{
                                 id="searchButton"
                                 onClick={props.handleSearch}
                             >
-                                Search
+                                {props.children}
                             </button>
                         </form>
-                        {/*<ul id="suggestions" className="mt-2">*/}
-                        {/*    {props.suggestions.map((suggestion, index) => (*/}
-                        {/*        <li key={index} className="border-b p-2">{suggestion}</li>*/}
-                        {/*    ))}*/}
-                        {/*</ul>*/}
+                        {/*<ul id="suggestions" className="mt-2">
+                            {props.suggestions.map((suggestion, index) => (
+                                <li key={index} className="border-b p-2">{suggestion}</li>
+                            ))}
+                        </ul>*/}
                     </div>
                 </div>
             </div>

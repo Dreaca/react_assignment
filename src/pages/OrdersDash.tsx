@@ -19,7 +19,7 @@ export function OrdersDash(){
                 <h1 className="p-5 text-4xl font-light mb-2 text-gray-900">Orders</h1>
             </div>
             <div>
-                <SearchOrder handleSearch={handleSearch} setSearchTerm={setSearchTerm}/>
+                <SearchOrder handleSearch={handleSearch} setSearchTerm={setSearchTerm}>Search</SearchOrder>
             </div>
             <table className="table-auto border-2 border-sky-400 w-full">
                 <thead className="bg-sky-200">

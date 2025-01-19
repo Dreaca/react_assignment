@@ -1,7 +1,14 @@
-// src/components/Order.tsx
+
 import React, { useState } from 'react';
+import SearchOrder from "../components/SearchOrder.tsx";
+import {useSelector} from "react-redux";
+import {Item} from "../models/Item.ts";
+import AddToCart from "../components/AddToCart.tsx";
 
 export function OrderDetailsDash(){
+
+    const items = useSelector(state => state.item.items)
+
     const [orderId, setOrderId] = useState('');
     const [customerId, setCustomerId] = useState('');
     const [orderDate, setOrderDate] = useState('');
@@ -11,26 +18,39 @@ export function OrderDetailsDash(){
     const [subTotal, setSubTotal] = useState<number | string>('');
     const [cash, setCash] = useState('');
     const [balance, setBalance] = useState('');
+    const [searchTerm,setSearchTerm] = useState("");
+    const [suggestions, setSuggestions] = useState<Item[]>([]);
+
+
+    const [isModalOpen,setIsModalOpen] = useState<boolean>(false);
 
     const handleBuy = () => {
         // Handle the buy order logic here
         console.log('Order placed:', { orderId, customerId, orderDate, customerName, total, discount, subTotal, cash, balance });
     };
-    const handleSubmit = ()=>{
+    /*const handleSubmit = ()=>{
 
-    }
+    }*/
 
     function handleFinish() {
 
     }
+    function handleSearch(){
+        const suggested:Item[] = []
+        items.forEach((item:Item) => {
+            if(item.desc.toLowerCase().includes(searchTerm.toLowerCase())){
+                suggested.push(item)
+            }
+        })
+        setSuggestions(suggested)
+        setIsModalOpen(true);
+    }
 
     return (
         <div className="flex flex-col md:flex-row">
-            {/* Right Pane - Form Section */}
             <div className="top-1.5 right-3 w-full md:w-1/4 border-2 border-black p-3 bg-white">
                 <h1 className="text-2xl font-bold mb-6 text-center">New Order</h1>
                 <form className="space-y-4">
-                    {/* Order Id */}
                     <div>
                         <label htmlFor="orderId" className="block text-sm font-medium mb-1">Order ID</label>
                         <input
@@ -159,7 +179,10 @@ export function OrderDetailsDash(){
             </div>
 
             {/* Table Section */}
-            <div className="w-full md:w-3/4 ml-0 md:ml-[12.5%] p-10">
+
+            <div className="w-full md:w-3/4 ml-0 md:ml-[4.5%] p-10">
+                <SearchOrder  setSearchTerm={setSearchTerm} handleSearch={handleSearch}>Add Item</SearchOrder>
+
                 <h1 className="text-2xl font-bold text-center mb-8">Item List</h1>
                 <table className="w-full border-collapse border border-gray-200">
                     <thead className="bg-gray-100">
@@ -183,6 +206,7 @@ export function OrderDetailsDash(){
                     >
                         Finished
                     </button>
+                    <AddToCart isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} suggestions={suggestions} />
                 </div>
             </div>
         </div>
