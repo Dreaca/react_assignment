@@ -1,12 +1,15 @@
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import SearchBar from "../components/SerchBar.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Item} from "../models/Item.ts";
 import AddItemModal from "../components/AddItem.tsx";
 import UpdateItemModal from "../components/UpdateItem.tsx";
+import {Appdispatch} from "../store/store.tsx";
+import {getAllItem} from "../reducer/ItemSlice.ts";
 
 export function ItemDash(){
     const items = useSelector(state => state.item.items);
+    const dispatch = useDispatch<Appdispatch>();
     const [isAddModalOpen, setAddModalOpen] = useState<boolean>(false);
 
     const [isUpdateModalOpen, setUpdateModalOpen] = useState<boolean>(false);
@@ -14,6 +17,10 @@ export function ItemDash(){
     const [selectedItem,setSelectedItem] = useState<Item|null>(null);
 
     const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+        dispatch(getAllItem())
+    }, [dispatch]);
 
     const handleSearch=()=>{
         console.log(searchTerm);

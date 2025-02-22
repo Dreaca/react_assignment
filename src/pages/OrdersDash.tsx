@@ -15,7 +15,7 @@ export function OrdersDash(){
     const handleOrder = (order:Order)=>{
         const isConfirmed = window.confirm(`Do you want to delete this order? ${order.orderId}`);
         if(isConfirmed){
-            dispatch(deleteOrder(order));
+            // dispatch(deleteOrder(order));
         }
     }
     return (
@@ -45,7 +45,7 @@ export function OrdersDash(){
                             <td>{order.customerName}</td>
                             <td>{order.date}</td>
                             <td>{order.total}</td>
-                            <td>{order.discount}</td>
+                            <td>{order.discount}%</td>
                             <td>{order.subtotal}</td>
                         </tr>
                     ))

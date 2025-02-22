@@ -11,12 +11,13 @@ import {clearCart} from "../reducer/OrderDetailSlice.ts";
 import {Customer} from "../models/Customer.ts";
 import {addOrder} from "../reducer/OrderSlice.ts";
 import {useNavigate} from "react-router";
+import {Appdispatch} from "../store/store.tsx";
 
 export function OrderDetailsDash() {
     const items = useSelector(state => state.item.items);
     const cartItems = useSelector(state => state.cart.cartItems);
     const customerList = useSelector(state => state.customer.customers)
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<Appdispatch>();
     const navigate = useNavigate();
 
     const [orderId, setOrderId] = useState('');
@@ -50,7 +51,10 @@ export function OrderDetailsDash() {
         setBalance(cash - calculatedSubTotal);
     }, [total, discount, cash]);
 
-    const handleBuy = () => {
+    const handleBuy = async () => {
+        if (orderDate||cash||customerName||customerId){
+            alert("Please fill out all the necessary details");
+        }
         if(order){
             order.orderId = orderId;
             order.date = orderDate
@@ -60,7 +64,7 @@ export function OrderDetailsDash() {
             order.discount = discount;
             order.subtotal = subTotal;
         }
-        dispatch(addOrder(order));
+        await dispatch(addOrder(order));
         navigate('/orders');
 
     };
@@ -177,6 +181,7 @@ export function OrderDetailsDash() {
                             value={total}
                             onChange={(e) => setTotal(Number(e.target.value))}
                             required
+                            readOnly
                         />
                     </div>
 

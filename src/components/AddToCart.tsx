@@ -1,7 +1,7 @@
 // src/components/AddItemModal.tsx
 import React, { useState } from 'react';
 import { Item } from "../models/Item.ts";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {addToCart} from "../reducer/OrderDetailSlice.ts";
 
 interface AddItemModalProps {
@@ -13,6 +13,7 @@ interface AddItemModalProps {
 const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, suggestions }) => {
 
     const dispatch = useDispatch();
+    const items = useSelector(state=>state.item.items);
 
     const [itemCode, setItemCode] = useState('');
     const [desc, setDesc] = useState('');
@@ -37,17 +38,22 @@ const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, suggestion
     };
 
     const handleAddToCart = () => {
-
         const cartItem = {
-                itemCode,
-                desc,
-                unitPrice,
-                qty,
-                subTotal,
+            itemCode,
+            desc,
+            unitPrice,
+            qty,
+            subTotal,
         }
 
-        dispatch(addToCart(cartItem));
-
+        items.forEach((item:Item) => {
+            if (item.itemCode === itemCode){
+                if (item.qto >= qty){
+                    dispatch(addToCart(cartItem));
+                }
+                else alert("Insufficient quantity for Item "+item.desc);
+            }
+        })
         setItemCode('');
         setDesc('');
         setUnitPrice(0);
