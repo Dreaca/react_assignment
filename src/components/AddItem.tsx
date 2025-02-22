@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import {useDispatch} from "react-redux";
 import {v4} from "uuid";
-import {addItem} from "../reducer/ItemSlice.ts";
+import {Appdispatch} from "../store/store.tsx";
+import {getAllItem, saveItem} from "../reducer/ItemSlice.ts";
 
 interface AddItemModalProps{
     isOpen:boolean;
@@ -9,7 +10,7 @@ interface AddItemModalProps{
 }
 
 const AddItemModal:React.FC<AddItemModalProps>=({isOpen, onClose}) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<Appdispatch>();
     const [itemDescription, setItemDescription] = useState("");
     const [author, setAuthor] = useState("");
     const [price, setPrice] = useState("");
@@ -17,18 +18,19 @@ const AddItemModal:React.FC<AddItemModalProps>=({isOpen, onClose}) => {
 
     if(!isOpen) return null;
 
-    const handleSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
+    const handleSubmit= async (e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
         const itemCode = `IID-${v4()}`
         const item = {
             itemCode:itemCode,
             desc : itemDescription,
             author : author,
-            qto: quantity,
-            price : price,
+            qto: Number(quantity),
+            price : Number(price),
         }
-        dispatch(addItem(item));
+        await dispatch(saveItem(item));
         onClose();
+        await dispatch(getAllItem())
     }
 
     return (

@@ -2,7 +2,8 @@ import {Item} from "../models/Item.ts";
 import {useDispatch} from "react-redux";
 import React, {useEffect, useState} from "react";
 
-import {deleteItem, updateItem} from "../reducer/ItemSlice.ts";
+import {deleteItem, getAllItem, updateItem} from "../reducer/ItemSlice.ts";
+import {Appdispatch} from "../store/store.tsx";
 
 
 interface UpdateItemModalProps {
@@ -12,13 +13,13 @@ interface UpdateItemModalProps {
 }
 
 const UpdateItemModal: React.FC<UpdateItemModalProps> = ({isOpen, onClose, selectedItem}) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<Appdispatch>();
 
     const [itemCode, setItemCode] = useState('');
     const [desc,setDesc] = useState('');
     const [author,setAuthor] = useState('');
-    const [qto, setQto] = useState<number>();
-    const [price, setPrice] = useState<number>();
+    const [qto, setQto] = useState(0);
+    const [price, setPrice] = useState(0);
 
     useEffect(() => {
         if(selectedItem){
@@ -32,23 +33,25 @@ const UpdateItemModal: React.FC<UpdateItemModalProps> = ({isOpen, onClose, selec
 
     if(!isOpen) return null;
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const item={
             itemCode,
             desc,
             author,
-            qto,
-            price,
+            qto:Number(qto),
+            price:Number(price),
         }
-        dispatch(updateItem(item));
+        await dispatch(updateItem(item));
         onClose();
+        await dispatch(getAllItem())
     };
-    const handleDelete = ()=>{
+    const handleDelete = async ()=>{
         if(selectedItem){
-            dispatch(deleteItem(selectedItem));
+           await dispatch(deleteItem(selectedItem.itemCode));
         }
         onClose();
+        await dispatch(getAllItem())
     }
     return (
         <>

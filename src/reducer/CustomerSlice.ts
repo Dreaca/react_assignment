@@ -59,24 +59,36 @@ const CustomerSlice = createSlice({
     name: 'customer',
     initialState: initialState,
     reducers: {
-        // addCustomer: (state, {payload}) => {
-        //     state.customers.push(payload);
-        // },
-        // deleteCustomer: (state, {payload}) => {
-        //     state.customers = state.customers.filter((customer:Customer) => customer.id !== payload.id);
-        // },
-        // updateCustomer: (state, action) => {
-        //     state.customers = state.customers.map((customer:Customer) =>
-        //         customer.id === action.payload.id ?
-        //             {...customer, id: action.payload.id,
-        //                 name: action.payload.name,
-        //                 address: action.payload.address,
-        //                 phone: action.payload.phone}
-        //             :customer
-        //     )
-        // }
+
+        /*
+        ==================================
+               REDUNDANT CODE BLOCK
+        ==================================
+        -> The following code block is redundant now because of createAsyncThunk methods
+        -> Uncomment in future if needed
+
+        */
+        /*
+
+        addCustomer: (state, {payload}) => {
+            state.customers.push(payload);
+        },
+        deleteCustomer: (state, {payload}) => {
+            state.customers = state.customers.filter((customer:Customer) => customer.id !== payload.id);
+        },
+        updateCustomer: (state, action) => {
+            state.customers = state.customers.map((customer:Customer) =>
+                customer.id === action.payload.id ?
+                    {...customer, id: action.payload.id,
+                        name: action.payload.name,
+                        address: action.payload.address,
+                        phone: action.payload.phone}
+                    :customer
+            )
+        }*/
     },extraReducers:(builder)=>{
         //saveCustomer
+
         builder
             .addCase(saveCustomer.fulfilled,(state,action)=>{
                 state.customers.push(action.payload)
@@ -89,7 +101,7 @@ const CustomerSlice = createSlice({
             })
         builder
             .addCase(deleteCustomer.fulfilled,(state,action)=>{
-                console.log(action.payload)
+                alert("Customer Deleted Successfully !")
             })
             .addCase(deleteCustomer.pending,(state,action)=>{
                 console.log("Pending delete...")
