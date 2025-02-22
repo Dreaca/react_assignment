@@ -1,22 +1,29 @@
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import SearchOrder from "../components/SearchOrder.tsx";
 import {useDispatch, useSelector} from "react-redux";
 import {Order} from "../models/Order.ts";
-import {deleteOrder} from "../reducer/OrderSlice.ts";
+import {Appdispatch} from "../store/store.tsx";
+import {deleteOrder, getAllOrders} from "../reducer/OrderSlice.ts";
 
 export function OrdersDash(){
     const orders = useSelector(state => state.orders.orders);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<Appdispatch>();
     const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+        dispatch(getAllOrders())
+    }, [dispatch]);
     const handleSearch = ()=>{
         //TODO: Handle search
+        setSearchTerm(searchTerm)
     }
-    const handleOrder = (order:Order)=>{
+    const handleOrder =async (order:Order)=>{
         const isConfirmed = window.confirm(`Do you want to delete this order? ${order.orderId}`);
         if(isConfirmed){
-            // dispatch(deleteOrder(order));
+            await dispatch(deleteOrder(order.orderId));
         }
+        await dispatch(getAllOrders())
     }
     return (
         <>
