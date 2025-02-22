@@ -82,7 +82,7 @@ const CustomerSlice = createSlice({
                 state.customers.push(action.payload)
             })
             .addCase(saveCustomer.pending,(state,action)=>{
-                console.error("Pending....")
+                console.error("Pending Add Customer ....")
             })
             .addCase(saveCustomer.rejected,(state,action)=>{
                 console.error("Customer Save Failed")
@@ -99,12 +99,10 @@ const CustomerSlice = createSlice({
             })
         builder
             .addCase(getAllCustomer.fulfilled,(state,action)=>{
-                action.payload.map((customer:Customer)=>{
-                    state.customers.push(customer)
-                })
+                state.customers = action.payload
             })
             .addCase(getAllCustomer.pending,(state,action)=>{
-                console.error("Pending")
+                console.error("Pending ALL customer")
             })
             .addCase(getAllCustomer.rejected,(state,action)=>{
                 console.error("Rejected All customer")

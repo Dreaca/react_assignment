@@ -4,7 +4,7 @@ import {useDispatch} from "react-redux";
 // import {addCustomer} from "../reducer/CustomerSlice.ts";
 import {v4} from "uuid";
 import {Appdispatch} from "../store/store.tsx";
-import {saveCustomer} from "../reducer/CustomerSlice.ts";
+import {getAllCustomer, saveCustomer} from "../reducer/CustomerSlice.ts";
 
 
 interface AddCustomerModalProps {
@@ -19,7 +19,7 @@ const AddCustomerModal: React.FC<AddCustomerModalProps> = ({ isOpen, onClose }) 
     const dispatch = useDispatch<Appdispatch>();
     if (!isOpen) return null;
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const id = `CID-${v4()}`;
         const customer = {
@@ -28,8 +28,9 @@ const AddCustomerModal: React.FC<AddCustomerModalProps> = ({ isOpen, onClose }) 
             address,
             phone,
         }
-        dispatch(saveCustomer(customer))
+        await dispatch(saveCustomer(customer))
         onClose();
+        await dispatch(getAllCustomer())
     };
 
     return (

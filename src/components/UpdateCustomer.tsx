@@ -2,7 +2,8 @@
 import React, {useEffect, useState} from 'react';
 import {Customer} from "../models/Customer.ts";
 import {useDispatch} from "react-redux";
-import {deleteCustomer, updateCustomer} from "../reducer/CustomerSlice.ts";
+import {deleteCustomer, getAllCustomer, updateCustomer} from "../reducer/CustomerSlice.ts";
+import {Appdispatch} from "../store/store.tsx";
 
 interface UpdateCustomerModalProps {
     isOpen: boolean;
@@ -15,7 +16,7 @@ const UpdateCustomerModal: React.FC<UpdateCustomerModalProps> = ({ isOpen, onClo
     const [phone, setPhone] = useState('');
     const [address,setAddress] = useState('');
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<Appdispatch>();
 
     useEffect(() => {
         if (selectedCustomer){
@@ -28,7 +29,7 @@ const UpdateCustomerModal: React.FC<UpdateCustomerModalProps> = ({ isOpen, onClo
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const customer={
             id,
@@ -36,14 +37,16 @@ const UpdateCustomerModal: React.FC<UpdateCustomerModalProps> = ({ isOpen, onClo
             address,
             phone,
         }
-        dispatch(updateCustomer(customer));
+       await dispatch(updateCustomer(customer));
         onClose();
+       await dispatch(getAllCustomer())
     };
-    const handleDelete = ()=>{
+    const handleDelete = async ()=>{
         if(selectedCustomer){
-            dispatch(deleteCustomer(selectedCustomer));
+         await   dispatch(deleteCustomer(selectedCustomer.id));
         }
         onClose();
+       await dispatch(getAllCustomer())
     }
 
     return (

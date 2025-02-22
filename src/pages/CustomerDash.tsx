@@ -1,12 +1,16 @@
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Customer} from "../models/Customer.ts";
 import SearchBar from "../components/SerchBar.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import AddCustomerModal from "../components/AddCustomer.tsx";
 import UpdateCustomerModal from "../components/UpdateCustomer.tsx";
+import {Appdispatch} from "../store/store.tsx";
+import {getAllCustomer} from "../reducer/CustomerSlice.ts";
 
 export function CustomerDash() {
     const customers = useSelector(state => state.customer.customers)
+
+    const dispatch = useDispatch<Appdispatch>();
 
     const [isAddModalOpen, setAddModalOpen] = useState<boolean>(false);
 
@@ -15,6 +19,10 @@ export function CustomerDash() {
     const [selectedCustomer,setSelectedCustomer] = useState<Customer | null>(null);
 
     const [searchTerm, setSearchTerm] = useState("");
+
+    useEffect(() => {
+        dispatch(getAllCustomer())
+    },[dispatch])
 
     function handleSearch() {
         console.log(searchTerm);
