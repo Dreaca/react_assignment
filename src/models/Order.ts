@@ -1,13 +1,13 @@
 import {CartItem} from "./CartItem.ts";
 
 export class Order {
-    orderId!:string;
-    customerId!:string;
-    date!:string;
-    customerName!:string;
-    total!:number;
-    discount!:number;
-    subtotal!:number;
+        orderId!:string;
+        customerId!:string;
+        date!:string;
+        customerName!:string;
+        total!:number;
+        discount!:number;
+        subtotal!:number;
     cartItems:CartItem[];
 
     constructor(orderId:string,customerId:string,date:string,customerName:string,total:number,discount:number,subtotal:number,cartItems:CartItem[]) {

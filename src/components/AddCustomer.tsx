@@ -1,8 +1,10 @@
 
 import React, {useState} from 'react';
 import {useDispatch} from "react-redux";
-import {addCustomer} from "../reducer/CustomerSlice.ts";
+// import {addCustomer} from "../reducer/CustomerSlice.ts";
 import {v4} from "uuid";
+import {Appdispatch} from "../store/store.tsx";
+import {saveCustomer} from "../reducer/CustomerSlice.ts";
 
 
 interface AddCustomerModalProps {
@@ -14,7 +16,7 @@ const AddCustomerModal: React.FC<AddCustomerModalProps> = ({ isOpen, onClose }) 
     const [name,setName] = useState('');
     const [address, setAddress] = useState('');
     const [phone, setPhone] = useState('');
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<Appdispatch>();
     if (!isOpen) return null;
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,7 +28,7 @@ const AddCustomerModal: React.FC<AddCustomerModalProps> = ({ isOpen, onClose }) 
             address,
             phone,
         }
-        dispatch(addCustomer(customer))
+        dispatch(saveCustomer(customer))
         onClose();
     };
 

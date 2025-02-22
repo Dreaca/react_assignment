@@ -13,3 +13,4 @@ export const store = configureStore({
         cart:OrderDetailSlice,
     },
 });
+export type Appdispatch = typeof store.dispatch;

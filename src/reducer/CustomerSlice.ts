@@ -1,32 +1,126 @@
-import { createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {Customer} from "../models/Customer.ts";
+import axios from 'axios'
 
 const initialState = {
-    customers: [] ,
+    customers: [{}] ,
 }
+const api = axios.create({
+    baseURL: 'http://localhost:3000/customer',
+})
+
+//Add customer
+export const saveCustomer = createAsyncThunk(
+    'customers/addCustomer',
+    async (customer:Customer)=>{
+        try {
+            const response = await api.post('/add',customer)
+            return response.data
+        }catch (err){
+            console.log(err)
+        }
+    }
+)
+export const getAllCustomer = createAsyncThunk(
+    'customers/getAllCustomer',
+    async ()=>{
+        try {
+            const response = await api.get('/getAll')
+            return response.data
+        }catch (err){
+            console.log(err)
+        }
+    }
+)
+export const deleteCustomer = createAsyncThunk(
+    'customers/deleteCustomer',
+    async (id:string)=>{
+        try {
+            const response = await api.delete(`/delete/${id}`)
+            return response.data
+        }catch (err){
+            console.log(err)
+        }
+    }
+)
+export const updateCustomer = createAsyncThunk(
+    'customers/updateCustomer',
+    async (customer:Customer)=>{
+        try {
+            const response = await api.put(`/update/${customer.id}`,customer)
+            return response.data
+        }catch (err){
+            console.log(err)
+        }
+    }
+)
 
 const CustomerSlice = createSlice({
     name: 'customer',
     initialState: initialState,
     reducers: {
-        addCustomer: (state, {payload}) => {
-            state.customers.push(payload);
-        },
-        deleteCustomer: (state, {payload}) => {
-            state.customers = state.customers.filter((customer:Customer) => customer.id !== payload.id);
-        },
-        updateCustomer: (state, action) => {
-            state.customers = state.customers.map((customer:Customer) =>
-                customer.id === action.payload.id ?
-                    {...customer, id: action.payload.id,
-                        name: action.payload.name,
-                        address: action.payload.address,
-                        phone: action.payload.phone}
-                    :customer
-            )
-        }
-    },
+        // addCustomer: (state, {payload}) => {
+        //     state.customers.push(payload);
+        // },
+        // deleteCustomer: (state, {payload}) => {
+        //     state.customers = state.customers.filter((customer:Customer) => customer.id !== payload.id);
+        // },
+        // updateCustomer: (state, action) => {
+        //     state.customers = state.customers.map((customer:Customer) =>
+        //         customer.id === action.payload.id ?
+        //             {...customer, id: action.payload.id,
+        //                 name: action.payload.name,
+        //                 address: action.payload.address,
+        //                 phone: action.payload.phone}
+        //             :customer
+        //     )
+        // }
+    },extraReducers:(builder)=>{
+        //saveCustomer
+        builder
+            .addCase(saveCustomer.fulfilled,(state,action)=>{
+                state.customers.push(action.payload)
+            })
+            .addCase(saveCustomer.pending,(state,action)=>{
+                console.error("Pending....")
+            })
+            .addCase(saveCustomer.rejected,(state,action)=>{
+                console.error("Customer Save Failed")
+            })
+        builder
+            .addCase(deleteCustomer.fulfilled,(state,action)=>{
+                console.log(action.payload)
+            })
+            .addCase(deleteCustomer.pending,(state,action)=>{
+                console.log("Pending delete...")
+            })
+            .addCase(deleteCustomer.rejected,(state,action)=>{
+                console.log("rejected")
+            })
+        builder
+            .addCase(getAllCustomer.fulfilled,(state,action)=>{
+                action.payload.map((customer:Customer)=>{
+                    state.customers.push(customer)
+                })
+            })
+            .addCase(getAllCustomer.pending,(state,action)=>{
+                console.error("Pending")
+            })
+            .addCase(getAllCustomer.rejected,(state,action)=>{
+                console.error("Rejected All customer")
+            })
+        builder
+            .addCase(updateCustomer.fulfilled,(state,action)=>{
+                state.customers.push(action.payload)
+            })
+            .addCase(updateCustomer.pending,()=>{
+                console.error("Update pending")
+            })
+            .addCase(updateCustomer.rejected,()=>{
+                console.error("Update Customer Rejected")
+            })
+    }
 });
 
-export const { addCustomer,deleteCustomer,updateCustomer } = CustomerSlice.actions;
+// export const { addCustomer,deleteCustomer,updateCustomer } = CustomerSlice.actions;
 export default CustomerSlice.reducer;
