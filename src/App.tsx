@@ -7,6 +7,7 @@ import {CustomerDash} from "./pages/CustomerDash.tsx";
 import {ItemDash} from "./pages/ItemDash.tsx";
 import {OrdersDash} from "./pages/OrdersDash.tsx";
 import {OrderDetailsDash} from "./pages/OrderDetailsDash.tsx";
+import {Login} from "./pages/Login.tsx";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
                 {path:'/items',element:<ItemDash/>},
                 {path:'/orders',element:<OrdersDash/>},
                 {path:'/orderdetail',element:<OrderDetailsDash/>},
+                {path:'/login',element:<Login/>}
                 ]}
     ])
     return (
