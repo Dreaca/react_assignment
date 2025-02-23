@@ -8,6 +8,17 @@ const initalstste={
 const api = axios.create({
     baseURL: "http://localhost:3000/orders"
 })
+api.interceptors.request.use(config=>{
+        const token = sessionStorage.getItem("access-token");
+        if(token){
+            config.headers.Authorization ='Bearer '+token;
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+)
 export const addOrder = createAsyncThunk(
     'orders/addOrder',
     async (order:Order)=>{

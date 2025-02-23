@@ -21,7 +21,7 @@ export function CustomerDash() {
     const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
-        dispatch(getAllCustomer())
+        dispatch (getAllCustomer())
     },[dispatch])
 
     function handleSearch() {

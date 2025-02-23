@@ -7,7 +7,19 @@ const initialState = {
 }
 const api = axios.create({
     baseURL: 'http://localhost:3000/customer',
+    withCredentials: true
 })
+api.interceptors.request.use(config=>{
+    const token = sessionStorage.getItem("access-token");
+    if(token){
+        config.headers.Authorization ='Bearer '+token;
+    }
+    return config;
+},
+    error => {
+    return Promise.reject(error);
+    }
+)
 
 //Add customer
 export const saveCustomer = createAsyncThunk(
@@ -114,7 +126,6 @@ const CustomerSlice = createSlice({
                 state.customers = action.payload
             })
             .addCase(getAllCustomer.pending,(state,action)=>{
-                console.error("Pending ALL customer")
             })
             .addCase(getAllCustomer.rejected,(state,action)=>{
                 console.error("Rejected All customer")

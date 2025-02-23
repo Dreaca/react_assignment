@@ -10,6 +10,17 @@ const initialState = {
 const api = axios.create({
     baseURL: 'http://localhost:3000/item',
 })
+api.interceptors.request.use(config=>{
+        const token = sessionStorage.getItem("access-token");
+        if(token){
+            config.headers.Authorization ='Bearer '+token;
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+)
 
 export const saveItem=createAsyncThunk(
     'item/saveItem',

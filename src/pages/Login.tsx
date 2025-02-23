@@ -26,6 +26,7 @@ export function Login() {
     const handleRegister = () => {
         const user: User = { username: registerUsername, password: registerPassword };
         dispatch(registerUser (user));
+        navigate("/");
     };
 
     const handleLogin = () => {

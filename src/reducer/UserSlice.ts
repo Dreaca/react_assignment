@@ -6,7 +6,7 @@ const initialState = {
     jwt_token: null,
     refresh_token : null,
     username: null,
-    isAuthenticated: true,
+    isAuthenticated: false,
     loading: false,
     error: '',
 };
@@ -62,6 +62,7 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.fulfilled,(state, action)=>{
                 state.jwt_token = action.payload.accessToken;
+                sessionStorage.setItem("access-token",action.payload.accessToken)
                 state.refresh_token = action.payload.refreshToken;
                 state.isAuthenticated = true;
             })
