@@ -10,12 +10,11 @@ export function Navigation() {
                         <Link className="custom-link !important font-bold font-serif text-2xl" to="/" >Simplify</Link>
                         <div className="flex space-x-10">
                             <Link className="custom-link" to="/">Home</Link>
-                            <Link className="custom-link" to="/customer">Customer</Link>
-                            <Link className="custom-link" to="/items">Item</Link><Link className="custom-link" to="/orders">Orders</Link>
-                            <Link className="custom-link" to="/login">Login</Link>
-                            <Link className="custom-link" to="/orders">New Orders</Link>
+                            <Link className="custom-link" to="customer">Customer</Link>
+                            <Link className="custom-link" to="items">Item</Link><Link className="custom-link" to="orders">Orders</Link>
+                            <Link className="custom-link" to="orders">New Orders</Link>
 
-                            <Link to="/orderdetail" className="fixed top-3 right-4 bg-blue-500 text-white p-3 rounded shadow-lg hover:bg-blue-600 transition">
+                            <Link to="orderdetail" className="fixed top-3 right-4 bg-blue-500 text-white p-3 rounded shadow-lg hover:bg-blue-600 transition">
                                 New Order
                             </Link>
                         </div>

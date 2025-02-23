@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import {Button, TextField, Typography, Container, Paper, Grid, Slide} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {Appdispatch } from "../store/store.ts";
-// import { loginUser , registerUser  } from "../reducer/UserSlice.ts";
+import { loginUser , registerUser  } from "../reducer/UserSlice.ts";
 import { useNavigate } from "react-router";
 import { User } from "../models/User.ts";
 
 export function Login() {
-    // const dispatch = useDispatch<Appdispatch>();
+    const dispatch = useDispatch<Appdispatch>();
     const navigate = useNavigate();
 
-    // const isAuthenticated = useSelector((state) => state.userReducer.isAuthenticated);
-    // const errorMessage = useSelector((state) => state.userReducer.errorMessage); // Assuming you have an error message in your state
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
 
     const [registerUsername, setRegisterUsername] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
@@ -25,24 +25,24 @@ export function Login() {
 
     const handleRegister = () => {
         const user: User = { username: registerUsername, password: registerPassword };
-        // dispatch(registerUser (user));
+        dispatch(registerUser (user));
     };
 
     const handleLogin = () => {
         const user: User = { username: loginUsername, password: loginPassword };
-        // dispatch(loginUser (user));
+        dispatch(loginUser (user));
     };
 
-    /*useEffect(() => {
+    useEffect(() => {
         if (isAuthenticated) {
             navigate('/home');
         }
-    }, [isAuthenticated, navigate]);*/
+    }, [isAuthenticated, navigate]);
 
     return (
         <Container component="main" maxWidth="xs" style={{marginTop:"3%"}}>
             <Paper elevation={3} style={{ padding: '20px', position: 'relative' ,height:"400px" , transition: 'height 0.3s ease-in-out'}}>
-                <Typography variant="h5" align="center">Welcome</Typography>
+                <Typography variant="h2" align="center" style={{fontFamily:'cursive'}}>Welcome</Typography>
 
                 {/* Login Form */}
                 {!showRegister && (
@@ -80,13 +80,13 @@ export function Login() {
                 )}
 
                 {/* Sign Up Link */}
-                <Typography variant="body2" align="center" style={{ cursor: 'pointer' }} onClick={toggleRegister}>
+                <Typography variant="body2" align="center" style={{ cursor: 'pointer' ,marginTop:"10px"}} onClick={toggleRegister}>
                     {showRegister ? "Already have an account? Login" : "Don't have an account? Sign Up"}
                 </Typography>
 
                 {/* Registration Form */}
                 <Slide direction="down" in={showRegister} mountOnEnter unmountOnExit timeout={200}>
-                    <Grid container spacing={2} style={{ marginTop: '10px' }}>
+                    <Grid container spacing={2} style={{ marginTop: '5px' }}>
                         <Grid item xs={12}>
                             <Typography variant="h6" align="center">Register</Typography>
                             <TextField
@@ -109,7 +109,7 @@ export function Login() {
                             <Button
                                 fullWidth
                                 variant="contained"
-                                color="primary"
+                                color="secondary"
                                 onClick={handleRegister}
                             >
                                 Register
