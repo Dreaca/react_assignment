@@ -42,6 +42,7 @@ const userSlice = createSlice({
     reducers:{
         logOutUser(state){
             state.isAuthenticated = false;
+            sessionStorage.removeItem('access-token');
         }
     },
     extraReducers(builder){
