@@ -60,7 +60,7 @@ export function OrdersDash(){
                             <td>{order.customerName}</td>
                             <td>{order.date}</td>
                             <td>{order.total}</td>
-                            <td>{order.discount}%</td>
+                            <td>{order.discount}</td>
                             <td>{order.subtotal}</td>
                         </tr>
                     ))

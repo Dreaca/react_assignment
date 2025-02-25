@@ -5,7 +5,6 @@ import {getAllCustomer} from "../reducer/CustomerSlice.ts";
 import {getAllItem} from "../reducer/ItemSlice.ts";
 import {getAllOrders} from "../reducer/OrderSlice.ts";
 import {logOutUser} from "../reducer/UserSlice.ts";
-import {Item} from "../models/Item.ts";
 
 export function Home() {
     const customers = useSelector(state => state.customer.customers)
@@ -21,7 +20,7 @@ export function Home() {
     },[dispatch])
     function outOfStock(){
         let count = 0;
-        item.forEach((item:Item) => {
+        item.forEach((item) => {
             if (item.qto===0) count++
         })
         return count

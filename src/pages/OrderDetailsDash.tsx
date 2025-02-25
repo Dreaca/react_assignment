@@ -67,7 +67,7 @@ export function OrderDetailsDash() {
             order.subtotal = subTotal;
         }
         await dispatch(addOrder(order));
-        navigate('orders');
+        navigate('/home/orders');
 
     };
 
