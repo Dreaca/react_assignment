@@ -25,7 +25,9 @@ export function CustomerDash() {
     },[dispatch])
 
     function handleSearch() {
-        console.log(searchTerm);
+        if(searchTerm){
+            setSearchTerm(searchTerm);
+        }
     }
     function showAddCustomer() {
         setAddModalOpen(true);
@@ -35,6 +37,14 @@ export function CustomerDash() {
         setUpdateModalOpen(true);
 
     }
+    const filteredCustomers = customers.filter((customer:Customer) => {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        return (
+            customer.name?.toLowerCase().includes(lowerCaseSearchTerm) ||
+            customer.address?.toLowerCase().includes(lowerCaseSearchTerm) ||
+            customer.phone?.toLowerCase().includes(lowerCaseSearchTerm)
+        );
+    });
     return (
         <>
             <div className="flex flex-col items-center">
@@ -53,7 +63,7 @@ export function CustomerDash() {
                 </thead>
                 <tbody>
                 {
-                    customers.map((customer:Customer) => (
+                    filteredCustomers.map((customer:Customer) => (
                         <tr key={customer.id} onClick={() => showUpdateCustomer(customer)}>
                             <td>{customer.name}</td>
                             <td>{customer.address}</td>

@@ -6,6 +6,7 @@ import AddItemModal from "../components/AddItem.tsx";
 import UpdateItemModal from "../components/UpdateItem.tsx";
 import {Appdispatch} from "../store/store.tsx";
 import {getAllItem} from "../reducer/ItemSlice.ts";
+import {Customer} from "../models/Customer.ts";
 
 export function ItemDash(){
     const items = useSelector(state => state.item.items);
@@ -23,7 +24,9 @@ export function ItemDash(){
     }, [dispatch]);
 
     const handleSearch=()=>{
-        console.log(searchTerm);
+        if (searchTerm && searchTerm.length > 0){
+            setSearchTerm(searchTerm);
+        }
     };
     const showAddItem=()=>{
         setAddModalOpen(true);
@@ -34,7 +37,14 @@ export function ItemDash(){
         setUpdateModalOpen(true);
 
     }
-
+    const filteredItems = items.filter((item:Item) => {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        return (
+            item.desc?.toLowerCase().includes(lowerCaseSearchTerm) ||
+            item.author?.toLowerCase().includes(lowerCaseSearchTerm) ||
+            item.price===Number(lowerCaseSearchTerm)
+        );
+    });
 
     return (
         <>
@@ -55,7 +65,7 @@ export function ItemDash(){
         </thead>
         <tbody>
         {
-            items.map((item:Item) => (
+            filteredItems.map((item:Item) => (
                 <tr key={item.itemCode} onClick={() => showUpdateItem(item)}>
                     <td>{item.desc}</td>
                     <td>{item.author}</td>

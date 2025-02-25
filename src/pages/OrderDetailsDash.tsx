@@ -52,10 +52,12 @@ export function OrderDetailsDash() {
     }, [total, discount, cash]);
 
     const handleBuy = async () => {
-        if (orderDate||cash||customerName||customerId){
+        if (!orderDate||!cash||!customerName){
+            console.log(orderDate)
             alert("Please fill out all the necessary details");
+            return;
         }
-        if(order){
+        else if(order){
             order.orderId = orderId;
             order.date = orderDate
             order.customerName = customerName;
@@ -65,7 +67,7 @@ export function OrderDetailsDash() {
             order.subtotal = subTotal;
         }
         await dispatch(addOrder(order));
-        navigate('/orders');
+        navigate('orders');
 
     };
 

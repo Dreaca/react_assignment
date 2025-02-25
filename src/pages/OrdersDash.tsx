@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Order} from "../models/Order.ts";
 import {Appdispatch} from "../store/store.tsx";
 import {deleteOrder, getAllOrders} from "../reducer/OrderSlice.ts";
+import {Item} from "../models/Item.ts";
 
 export function OrdersDash(){
     const orders = useSelector(state => state.orders.orders);
@@ -25,6 +26,13 @@ export function OrdersDash(){
         }
         await dispatch(getAllOrders())
     }
+    const filteredOrders = orders?.filter((order:Order) => {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        return (
+            order.date?.toLowerCase().includes(lowerCaseSearchTerm) ||
+            order.customerName?.toLowerCase().includes(lowerCaseSearchTerm)
+        );
+    });
     return (
         <>
             <div className="flex flex-col items-center">
@@ -46,7 +54,7 @@ export function OrdersDash(){
                 </thead>
                 <tbody>
                 {
-                    orders.map((order: Order) => (
+                    filteredOrders.map((order: Order) => (
                         <tr key={order.orderId} onClick={() => handleOrder(order)}>
                             <td>{order.orderId}</td>
                             <td>{order.customerName}</td>
